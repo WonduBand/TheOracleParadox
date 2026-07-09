@@ -792,7 +792,9 @@ function renderTrack(song, actKey){
   div.dataset.act = actKey;
   div.dataset.index = song.trackNum - 1;
 
-  const tag = song.instrumental ? (song.note || 'Instrumental') : 'Lyrics';
+  const tagHtml = song.instrumental
+    ? `<div class="track-tag">${song.note || 'Instrumental'}</div>`
+    : '';
 
   div.innerHTML = `
     <div class="track-row">
@@ -803,7 +805,7 @@ function renderTrack(song, actKey){
       </button>
       <div class="track-title-wrap">
         <div class="track-title">${song.title}</div>
-        <div class="track-tag">${tag}</div>
+        ${tagHtml}
       </div>
     </div>`;
 
