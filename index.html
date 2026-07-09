@@ -108,9 +108,9 @@
   .covers{
     margin-top:64px;
     display:grid;
-    grid-template-columns:repeat(3, minmax(290px, 400px));
-    gap:40px;
-    max-width:1360px;
+    grid-template-columns:repeat(3, minmax(330px, 460px));
+    gap:46px;
+    max-width:1560px;
     width:100%;
     justify-content:center;
   }
@@ -196,6 +196,7 @@
     display:flex;
     align-items:center;
     justify-content:space-between;
+    padding-right:56px;
   }
   .back-btn{
     background:transparent;
@@ -545,6 +546,44 @@
   }
   #np-status.err{ color:#e0685f; }
 
+  #np-volume{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    flex-shrink:0;
+  }
+  #np-mute{
+    background:transparent; border:none; color:var(--dim); cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    padding:6px;
+    transition:color 0.15s ease;
+  }
+  #np-mute:hover{ color:var(--gold); }
+  #np-mute svg{ width:17px; height:17px; }
+  #np-vol-slider{
+    width:80px;
+    -webkit-appearance:none;
+    appearance:none;
+    height:3px;
+    border-radius:2px;
+    background:var(--border);
+    outline:none;
+    cursor:pointer;
+  }
+  #np-vol-slider::-webkit-slider-thumb{
+    -webkit-appearance:none;
+    width:11px; height:11px;
+    border-radius:50%;
+    background:var(--gold);
+    cursor:pointer;
+    box-shadow:0 0 6px rgba(201,162,75,0.6);
+  }
+  #np-vol-slider::-moz-range-thumb{
+    width:11px; height:11px; border-radius:50%;
+    background:var(--gold); border:none;
+    box-shadow:0 0 6px rgba(201,162,75,0.6);
+  }
+
   @media (max-width:900px){
     .content-area{ flex-direction:column; align-items:stretch; }
     .content-area.playing{ gap:20px; }
@@ -580,9 +619,41 @@
   }
 
   ::selection{ background:rgba(201,162,75,0.35); }
+
+  #fullscreenBtn{
+    position:fixed;
+    top:22px;
+    right:22px;
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    background:rgba(12,15,20,0.7);
+    backdrop-filter:blur(6px);
+    border:1px solid var(--border);
+    color:var(--dim);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    z-index:2000;
+    transition:color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+  }
+  #fullscreenBtn:hover{ color:var(--gold); border-color:var(--gold); background:rgba(12,15,20,0.9); }
+  #fullscreenBtn svg{ width:17px; height:17px; }
+
+  @media (max-width:640px){
+    #fullscreenBtn{ top:14px; right:14px; width:36px; height:36px; }
+    #fullscreenBtn svg{ width:15px; height:15px; }
+  }
 </style>
 </head>
 <body>
+
+<button id="fullscreenBtn" title="Toggle Fullscreen">
+  <svg id="fullscreenIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/>
+  </svg>
+</button>
 
 <div id="home">
   <h1 class="logo">WONDU</h1>
@@ -653,6 +724,12 @@
     <span id="np-duration">0:00</span>
   </div>
   <div id="np-status"></div>
+  <div id="np-volume">
+    <button id="np-mute" title="Mute">
+      <svg id="np-vol-icon" viewBox="0 0 24 24" fill="currentColor"><path d="M3 10v4h4l5 5V5L7 10H3z"/><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/><path d="M14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+    </button>
+    <input type="range" id="np-vol-slider" min="0" max="1" value="1" step="0.01">
+  </div>
 </div>
 
 <audio id="audioEl" preload="none"></audio>
@@ -671,6 +748,25 @@ const ALBUM_META = {
 };
 
 const homeEl = document.getElementById('home');
+
+// ---- fullscreen toggle ----
+const fullscreenBtn = document.getElementById('fullscreenBtn');
+const fullscreenIcon = document.getElementById('fullscreenIcon');
+const EXPAND_PATHS = '<path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/>';
+const COMPRESS_PATHS = '<path d="M8 3v3a2 2 0 0 1-2 2H3"/><path d="M21 8h-3a2 2 0 0 1-2-2V3"/><path d="M3 16h3a2 2 0 0 1 2 2v3"/><path d="M16 21v-3a2 2 0 0 1 2-2h3"/>';
+
+function updateFullscreenIcon(){
+  fullscreenIcon.innerHTML = document.fullscreenElement ? COMPRESS_PATHS : EXPAND_PATHS;
+}
+fullscreenBtn.addEventListener('click', () => {
+  if (!document.fullscreenElement){
+    document.documentElement.requestFullscreen().catch(() => {});
+  } else {
+    document.exitFullscreen().catch(() => {});
+  }
+});
+document.addEventListener('fullscreenchange', updateFullscreenIcon);
+
 const playerEl = document.getElementById('player');
 const tracklistEl = document.getElementById('tracklist');
 const contentArea = document.getElementById('contentArea');
@@ -865,6 +961,63 @@ audioEl.addEventListener('timeupdate', () => {
 let isSeeking = false;
 npSeek.addEventListener('input', () => { isSeeking = true; npTime.textContent = fmtTime(npSeek.value); });
 npSeek.addEventListener('change', () => { audioEl.currentTime = npSeek.value; isSeeking = false; });
+
+// ---- volume ----
+const npMute = document.getElementById('np-mute');
+const npVolIcon = document.getElementById('np-vol-icon');
+const npVolSlider = document.getElementById('np-vol-slider');
+let lastVolume = 1;
+
+function loadStoredVolume(){
+  try {
+    const stored = localStorage.getItem('wondu-volume');
+    return stored !== null ? parseFloat(stored) : 1;
+  } catch (e) { return 1; }
+}
+function storeVolume(v){
+  try { localStorage.setItem('wondu-volume', v); } catch (e) {}
+}
+
+function updateVolumeIcon(){
+  const v = audioEl.volume;
+  let path;
+  if (v === 0 || audioEl.muted){
+    path = '<path d="M16.5 12l3.5 3.5-1.5 1.5L15 13.5 11.5 17 10 15.5l3.5-3.5L10 8.5 11.5 7 15 10.5 18.5 7l1.5 1.5z"/><path d="M3 10v4h4l5 5V5L7 10H3z"/>';
+  } else if (v < 0.5){
+    path = '<path d="M3 10v4h4l5 5V5L7 10H3z"/><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/>';
+  } else {
+    path = '<path d="M3 10v4h4l5 5V5L7 10H3z"/><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/><path d="M14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>';
+  }
+  npVolIcon.innerHTML = path;
+  npVolSlider.value = audioEl.muted ? 0 : v;
+}
+
+const initialVolume = loadStoredVolume();
+audioEl.volume = initialVolume;
+npVolSlider.value = initialVolume;
+lastVolume = initialVolume || 1;
+updateVolumeIcon();
+
+npVolSlider.addEventListener('input', () => {
+  const v = parseFloat(npVolSlider.value);
+  audioEl.muted = false;
+  audioEl.volume = v;
+  if (v > 0) lastVolume = v;
+  storeVolume(v);
+  updateVolumeIcon();
+});
+
+npMute.addEventListener('click', () => {
+  if (audioEl.muted || audioEl.volume === 0){
+    audioEl.muted = false;
+    audioEl.volume = lastVolume || 1;
+    storeVolume(audioEl.volume);
+  } else {
+    lastVolume = audioEl.volume;
+    audioEl.muted = true;
+  }
+  updateVolumeIcon();
+});
 
 function updatePlayIcon(){
   npPlayIcon.innerHTML = isPlaying
