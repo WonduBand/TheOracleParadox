@@ -50,7 +50,7 @@
   }
   h1,h2,h3{font-family:'Orbitron',sans-serif; margin:0;}
 
-  body.has-player{ padding-bottom:var(--bar-h); }
+  body.has-player{ /* padding-bottom is set dynamically in JS to match the actual bar height */ }
 
   /* ============ HOME VIEW ============ */
   #home{
@@ -557,6 +557,28 @@
     #np-status{ display:none; }
   }
 
+  @media (max-width:640px){
+    #nowplaying{
+      flex-wrap:wrap;
+      height:auto;
+      align-items:center;
+      padding:10px 16px 12px;
+      row-gap:10px;
+      column-gap:12px;
+    }
+    #np-cover{ width:42px; height:42px; }
+    #np-info{ width:auto; flex:1 1 auto; min-width:0; }
+    #np-controls{ gap:12px; order:2; }
+    #np-volume{ order:3; }
+    #np-vol-slider{ width:56px; }
+    #np-progress-wrap{ flex:0 0 100%; width:100%; order:10; gap:8px; }
+    #np-time, #np-duration{ min-width:32px; font-size:0.65rem; }
+  }
+
+  @media (max-width:380px){
+    #np-vol-slider{ width:0; opacity:0; padding:0; margin:0; }
+  }
+
   ::selection{ background:rgba(201,162,75,0.35); }
 </style>
 </head>
@@ -782,6 +804,15 @@ const npPlayIcon = document.getElementById('np-play-icon');
 const npSeek = document.getElementById('np-seek');
 const npTime = document.getElementById('np-time');
 const npDuration = document.getElementById('np-duration');
+const nowplayingEl = document.getElementById('nowplaying');
+
+function syncBarPadding(){
+  if (document.body.classList.contains('has-player')){
+    document.body.style.paddingBottom = nowplayingEl.offsetHeight + 'px';
+  }
+}
+window.addEventListener('resize', syncBarPadding);
+window.addEventListener('orientationchange', () => setTimeout(syncBarPadding, 150));
 
 function playTrack(actKey, index){
   const act = DATA[actKey];
@@ -797,6 +828,7 @@ function playTrack(actKey, index){
   document.body.classList.add('has-player');
   npStatus.textContent = '';
   npStatus.classList.remove('err');
+  requestAnimationFrame(syncBarPadding);
 
   audioEl.src = song.file.split('/').map(encodeURIComponent).join('/');
   audioEl.play().then(() => {
