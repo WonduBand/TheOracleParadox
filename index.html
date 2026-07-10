@@ -135,6 +135,9 @@
     flex-direction:column;
     align-items:center;
     padding:70px 20px 60px;
+    overflow-x:hidden;
+    width:100%;
+    box-sizing:border-box;
   }
   @media (min-width:901px){
     #home{
@@ -293,6 +296,18 @@
     display:none;
     min-height:100vh;
     padding:34px 26px 60px;
+    background-repeat:repeat;
+    background-size:640px;
+    transition:background-image 0.5s ease;
+  }
+  #player[data-accent="actI"]{
+    background-image:linear-gradient(rgba(5,6,8,0.88), rgba(5,6,8,0.88)), url('Background_Album1.jpg');
+  }
+  #player[data-accent="actII"]{
+    background-image:linear-gradient(rgba(5,6,8,0.88), rgba(5,6,8,0.88)), url('Background_Album2.jpg');
+  }
+  #player[data-accent="actIII"]{
+    background-image:linear-gradient(rgba(5,6,8,0.88), rgba(5,6,8,0.88)), url('Background_Album3.jpg');
   }
   .top-bar{
     max-width:1200px;
@@ -831,7 +846,27 @@
     }
 
     .logo{ font-size:2.6rem; letter-spacing:8px; }
-    .covers{ grid-template-columns:1fr; max-width:320px; }
+    .covers{
+      display:flex;
+      flex-direction:row;
+      flex-wrap:nowrap;
+      justify-content:flex-start;
+      overflow-x:auto;
+      scroll-snap-type:x mandatory;
+      -webkit-overflow-scrolling:touch;
+      max-width:100%;
+      width:100%;
+      gap:20px;
+      padding:0 20px 8px;
+      margin-top:48px;
+      scrollbar-width:none;
+    }
+    .covers::-webkit-scrollbar{ display:none; }
+    .cover-card{
+      flex:0 0 78vw;
+      max-width:320px;
+      scroll-snap-align:center;
+    }
     #np-info{ width:110px; }
     #np-status{ display:none; }
   }
@@ -1296,10 +1331,6 @@ function playTrack(actKey, index){
 
   refreshNowPlayingHighlight();
   syncContentArea();
-
-  if (isMobileLayout()){
-    requestAnimationFrame(() => requestAnimationFrame(() => goToPanel(2)));
-  }
 }
 
 audioEl.addEventListener('error', () => {
