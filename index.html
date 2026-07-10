@@ -734,13 +734,12 @@
   .np-toggle{
     align-self:center;
     flex-shrink:0;
-    width:48px;
+    width:52px;
     height:18px;
-    margin-top:6px;
-    margin-bottom:6px;
-    border-radius:9px;
+    border-radius:8px 8px 0 0;
     background:rgba(12,15,20,0.96);
     border:1px solid var(--border);
+    border-bottom:none;
     cursor:grab;
     color:var(--dim);
     display:flex;
@@ -902,6 +901,7 @@
   #panelNav{
     position:fixed;
     left:0; right:0;
+    bottom:0;
     z-index:999;
     display:none;
     justify-content:center;
@@ -1052,6 +1052,9 @@
 </div>
 
 <div id="nowplaying">
+  <button id="npToggle" class="np-toggle" title="Hide / show player">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+  </button>
   <div class="np-content">
     <img id="np-cover" src="" alt="">
     <div id="np-info">
@@ -1076,9 +1079,6 @@
       <input type="range" id="np-vol-slider" min="0" max="1" value="1" step="0.01">
     </div>
   </div>
-  <button id="npToggle" class="np-toggle" title="Hide / show player">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-  </button>
 </div>
 
 <audio id="audioEl" preload="none"></audio>
@@ -1294,7 +1294,8 @@ const nowplayingEl = document.getElementById('nowplaying');
 
 function syncBarPadding(){
   if (document.body.classList.contains('has-player')){
-    document.body.style.paddingBottom = nowplayingEl.offsetHeight + 'px';
+    const navH = (panelNav && panelNav.style.display === 'flex') ? panelNav.offsetHeight : 0;
+    document.body.style.paddingBottom = (nowplayingEl.offsetHeight + navH) + 'px';
   }
 }
 window.addEventListener('resize', syncBarPadding);
@@ -1344,9 +1345,8 @@ function isMobileLayout(){
 function syncPanelNav(){
   const show = isMobileLayout() && contentArea.classList.contains('playing');
   panelNav.style.display = show ? 'flex' : 'none';
-  if (show){
-    panelNav.style.bottom = nowplayingEl.offsetHeight + 'px';
-  }
+  nowplayingEl.style.bottom = show ? panelNav.offsetHeight + 'px' : '0px';
+  syncBarPadding();
 }
 
 function goToPanel(index){
