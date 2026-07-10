@@ -420,9 +420,9 @@
     transition:opacity 0.2s ease;
   }
   .track:hover::before{ opacity:0.5; }
-  .track.now-playing::before{ opacity:1; }
+  .track.current::before{ opacity:1; }
   .track:hover{ border-color:#3a4150; }
-  .track.now-playing{ background:var(--panel2); }
+  .track.current{ background:var(--panel2); }
 
   .track-row{
     display:flex;
@@ -455,15 +455,22 @@
   .track-playbtn .eq span:nth-child(2){ animation-delay:0.2s; }
   .track-playbtn .eq span:nth-child(3){ animation-delay:0.4s; }
   @keyframes eqbar{ 0%,100%{ height:3px; } 50%{ height:12px; } }
-  .track.now-playing .track-playbtn{ border-color:var(--gold); color:var(--gold); }
-  .track.now-playing .track-playbtn .num{ display:none; }
-  .track.now-playing .track-playbtn .eq{ display:flex; }
-  .track.now-playing .track-playbtn .playicon{ display:none; }
+  .track-playbtn .playicon{ display:none; }
+  .track:hover .track-playbtn .num{ display:none; }
+  .track:hover .track-playbtn .playicon{ display:flex; }
+  .track.current .track-playbtn{ border-color:var(--gold); color:var(--gold); }
+  .track.current .track-playbtn .num{ display:none; }
+  .track.current .track-playbtn .playicon{ display:flex; }
+  .track.current.now-playing .track-playbtn .playicon{ display:none; }
+  .track.current.now-playing .track-playbtn .eq{ display:flex; }
+  .track.current .track-playbtn .pauseicon{ display:none; }
+  .track.current.now-playing:hover .track-playbtn .eq{ display:none; }
+  .track.current.now-playing:hover .track-playbtn .pauseicon{ display:flex; }
 
   .track-title-wrap{ flex:1; min-width:0; }
   .track-title{ font-size:1.05rem; letter-spacing:0.3px; color:var(--text); }
   .track.instrumental .track-title{ color:var(--dim); font-style:italic; }
-  .track.now-playing .track-title{ color:var(--gold); }
+  .track.current .track-title{ color:var(--gold); }
   .track-tag{
     display:inline-block;
     margin-top:3px;
@@ -660,9 +667,9 @@
   /* act accent application */
   #player[data-accent="actI"] .accent-bar{ background:var(--actI); }
   #player[data-accent="actI"] .play-album-btn{ border-color:var(--actI); color:var(--actI); }
-  #player[data-accent="actI"] .track.now-playing .track-title{ color:var(--actI); }
+  #player[data-accent="actI"] .track.current .track-title{ color:var(--actI); }
   #player[data-accent="actI"] .track::before{ background:var(--actI); }
-  #player[data-accent="actI"] .track.now-playing .track-playbtn{ border-color:var(--actI); color:var(--actI); }
+  #player[data-accent="actI"] .track.current .track-playbtn{ border-color:var(--actI); color:var(--actI); }
   #player[data-accent="actI"] .track:hover .track-playbtn{ border-color:var(--actI); color:var(--actI); }
   #player[data-accent="actI"] .track-playbtn .eq span{ background:var(--actI); }
   #player[data-accent="actI"] .lyrics-section .sec-label{ color:var(--actI); }
@@ -674,9 +681,9 @@
 
   #player[data-accent="actII"] .accent-bar{ background:var(--actII); }
   #player[data-accent="actII"] .play-album-btn{ border-color:var(--actII); color:var(--actII); }
-  #player[data-accent="actII"] .track.now-playing .track-title{ color:var(--actII); }
+  #player[data-accent="actII"] .track.current .track-title{ color:var(--actII); }
   #player[data-accent="actII"] .track::before{ background:var(--actII); }
-  #player[data-accent="actII"] .track.now-playing .track-playbtn{ border-color:var(--actII); color:var(--actII); }
+  #player[data-accent="actII"] .track.current .track-playbtn{ border-color:var(--actII); color:var(--actII); }
   #player[data-accent="actII"] .track:hover .track-playbtn{ border-color:var(--actII); color:var(--actII); }
   #player[data-accent="actII"] .track-playbtn .eq span{ background:var(--actII); }
   #player[data-accent="actII"] .lyrics-section .sec-label{ color:var(--actII); }
@@ -688,9 +695,9 @@
 
   #player[data-accent="actIII"] .accent-bar{ background:var(--actIII); }
   #player[data-accent="actIII"] .play-album-btn{ border-color:var(--actIII); color:var(--actIII); }
-  #player[data-accent="actIII"] .track.now-playing .track-title{ color:var(--actIII); }
+  #player[data-accent="actIII"] .track.current .track-title{ color:var(--actIII); }
   #player[data-accent="actIII"] .track::before{ background:var(--actIII); }
-  #player[data-accent="actIII"] .track.now-playing .track-playbtn{ border-color:var(--actIII); color:var(--actIII); }
+  #player[data-accent="actIII"] .track.current .track-playbtn{ border-color:var(--actIII); color:var(--actIII); }
   #player[data-accent="actIII"] .track:hover .track-playbtn{ border-color:var(--actIII); color:var(--actIII); }
   #player[data-accent="actIII"] .track-playbtn .eq span{ background:var(--actIII); }
   #player[data-accent="actIII"] .lyrics-section .sec-label{ color:var(--actIII); }
@@ -784,6 +791,39 @@
     width:11px; height:11px; border-radius:50%;
     background:var(--gold); border:none;
     box-shadow:0 0 6px rgba(201,162,75,0.6);
+  }
+
+  /* desktop: artwork centered above tracklist + lyrics, bigger */
+  @media (min-width:901px){
+    .content-area.playing{
+      display:grid;
+      grid-template-columns:380px 1fr;
+      grid-template-areas:
+        "art art"
+        "tracks lyrics";
+      gap:32px;
+      max-width:1040px;
+      justify-content:center;
+    }
+    .content-area.playing .tracklist-col{
+      grid-area:tracks;
+      flex:none;
+      width:100%;
+    }
+    .content-area.playing .artwork-col{
+      grid-area:art;
+      flex:none;
+      width:100%;
+      max-width:600px;
+      justify-self:center;
+      opacity:1;
+    }
+    .content-area.playing .lyrics-col{
+      grid-area:lyrics;
+      flex:none;
+      width:100%;
+      opacity:1;
+    }
   }
 
   @media (max-width:900px){
@@ -1074,9 +1114,10 @@ function renderTrack(song, actKey){
 
   div.innerHTML = `
     <div class="track-row">
-      <button class="track-playbtn glitch-hover" title="Play">
+      <button class="track-playbtn glitch-hover" title="Play / Pause">
         <span class="num">${String(song.trackNum).padStart(2,'0')}</span>
         <svg class="playicon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        <svg class="pauseicon" viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h4v14H6zm8 0h4v14h-4z"/></svg>
         <span class="eq"><span></span><span></span><span></span></span>
       </button>
       <div class="track-title-wrap">
@@ -1085,7 +1126,14 @@ function renderTrack(song, actKey){
       </div>
     </div>`;
 
-  div.addEventListener('click', () => playTrack(actKey, song.trackNum - 1));
+  div.addEventListener('click', () => {
+    const idx = song.trackNum - 1;
+    if (playingAct === actKey && playingIndex === idx){
+      if (audioEl.paused) audioEl.play(); else audioEl.pause();
+    } else {
+      playTrack(actKey, idx);
+    }
+  });
   return div;
 }
 
@@ -1380,6 +1428,7 @@ function updatePlayIcon(){
 function refreshNowPlayingHighlight(){
   document.querySelectorAll('.track').forEach(t => {
     const isThis = t.dataset.act === playingAct && parseInt(t.dataset.index) === playingIndex;
+    t.classList.toggle('current', isThis);
     t.classList.toggle('now-playing', isThis && isPlaying);
   });
 }
