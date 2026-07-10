@@ -734,19 +734,23 @@
   .np-toggle{
     align-self:center;
     flex-shrink:0;
-    width:52px;
+    width:48px;
     height:18px;
-    border-radius:8px 8px 0 0;
+    margin-top:6px;
+    margin-bottom:6px;
+    border-radius:9px;
     background:rgba(12,15,20,0.96);
     border:1px solid var(--border);
-    border-bottom:none;
-    cursor:pointer;
+    cursor:grab;
     color:var(--dim);
     display:flex;
     align-items:center;
     justify-content:center;
     transition:color 0.2s ease;
+    touch-action:none;
+    user-select:none;
   }
+  .np-toggle:active{ cursor:grabbing; }
   .np-toggle:hover{ color:var(--gold); }
   .np-toggle svg{ width:15px; height:15px; transition:transform 0.3s ease; }
   #nowplaying.collapsed .np-toggle svg{ transform:rotate(180deg); }
@@ -1048,9 +1052,6 @@
 </div>
 
 <div id="nowplaying">
-  <button id="npToggle" class="np-toggle" title="Hide / show player">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-  </button>
   <div class="np-content">
     <img id="np-cover" src="" alt="">
     <div id="np-info">
@@ -1075,6 +1076,9 @@
       <input type="range" id="np-vol-slider" min="0" max="1" value="1" step="0.01">
     </div>
   </div>
+  <button id="npToggle" class="np-toggle" title="Hide / show player">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+  </button>
 </div>
 
 <audio id="audioEl" preload="none"></audio>
@@ -1297,10 +1301,35 @@ window.addEventListener('resize', syncBarPadding);
 window.addEventListener('orientationchange', () => setTimeout(syncBarPadding, 150));
 
 const npToggle = document.getElementById('npToggle');
-npToggle.addEventListener('click', () => {
-  nowplayingEl.classList.toggle('collapsed');
+
+function setCollapsed(collapsed){
+  nowplayingEl.classList.toggle('collapsed', collapsed);
   syncBarPadding();
   syncPanelNav();
+}
+
+let npDragStartY = null;
+let npDragMoved = false;
+
+npToggle.addEventListener('pointerdown', (e) => {
+  npDragStartY = e.clientY;
+  npDragMoved = false;
+  npToggle.setPointerCapture(e.pointerId);
+});
+npToggle.addEventListener('pointermove', (e) => {
+  if (npDragStartY === null) return;
+  if (Math.abs(e.clientY - npDragStartY) > 6) npDragMoved = true;
+});
+npToggle.addEventListener('pointerup', (e) => {
+  if (npDragStartY === null) return;
+  const deltaY = e.clientY - npDragStartY;
+  const SWIPE_THRESHOLD = 12;
+  if (Math.abs(deltaY) > SWIPE_THRESHOLD){
+    setCollapsed(deltaY > 0); // swipe down -> collapse, swipe up -> expand
+  } else {
+    setCollapsed(!nowplayingEl.classList.contains('collapsed')); // plain tap toggles
+  }
+  npDragStartY = null;
 });
 
 // ---- mobile panel nav (tracks / artwork / lyrics swipe) ----
