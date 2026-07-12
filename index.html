@@ -836,6 +836,9 @@
   }
 
   @media (max-width:900px){
+    .cover-section{ display:none; }
+    #player{ padding:16px 12px 20px; min-height:auto; }
+
     .content-area{ flex-direction:column; align-items:stretch; }
 
     /* idle: just the tracklist, stacked, full width */
@@ -873,6 +876,17 @@
     }
 
     .logo{ font-size:2.6rem; letter-spacing:8px; }
+    .tracklist{ gap:4px; }
+    .track-row{ padding:8px 12px; gap:10px; }
+    .track-playbtn{
+      width:20px; min-width:20px; height:20px;
+      border:none;
+      background:transparent;
+      font-size:0.7rem;
+    }
+    .track-title{ font-size:0.92rem; }
+    .track-tag{ font-size:0.58rem; }
+    .track{ border-radius:5px; }
     .covers{
       display:flex;
       flex-direction:row;
