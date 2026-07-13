@@ -437,6 +437,8 @@
   .track.current::before{ opacity:1; }
   .track:hover{ border-color:#3a4150; }
   .track.current{ background:var(--panel2); }
+  .track.viewing:not(.current){ border-color:rgba(201,162,75,0.4); }
+  .track.viewing:not(.current) .tnum{ color:var(--gold); opacity:0.9; }
 
   .track-row{
     display:flex;
@@ -1145,6 +1147,8 @@ let currentAct = null;
 let playingAct = null;
 let playingIndex = -1;
 let isPlaying = false;
+let viewAct = null;
+let viewIndex = -1;
 
 function fmtTime(sec){
   if (!isFinite(sec) || sec == null) return '0:00';
@@ -1185,6 +1189,9 @@ function renderTrack(song, actKey){
     } else {
       playTrack(actKey, idx);
     }
+  });
+  div.addEventListener('click', () => {
+    viewTrack(actKey, song.trackNum - 1);
   });
   return div;
 }
@@ -1257,9 +1264,13 @@ function renderArtworkPanel(song){
 }
 
 function syncContentArea(){
-  if (playingAct === currentAct && playingIndex > -1){
+  document.querySelectorAll('.track').forEach(t => {
+    const isViewed = t.dataset.act === viewAct && parseInt(t.dataset.index) === viewIndex;
+    t.classList.toggle('viewing', isViewed);
+  });
+  if (viewAct === currentAct && viewIndex > -1){
     contentArea.classList.add('playing');
-    const song = DATA[playingAct].songs[playingIndex];
+    const song = DATA[viewAct].songs[viewIndex];
     renderLyricsPanel(song);
     renderArtworkPanel(song);
   } else {
@@ -1268,6 +1279,12 @@ function syncContentArea(){
     artworkPanel.innerHTML = '';
   }
   syncPanelNav();
+}
+
+function viewTrack(actKey, index){
+  viewAct = actKey;
+  viewIndex = index;
+  syncContentArea();
 }
 
 function openAlbum(actKey){
@@ -1427,6 +1444,8 @@ function playTrack(actKey, index){
 
   playingAct = actKey;
   playingIndex = index;
+  viewAct = actKey;
+  viewIndex = index;
 
   document.getElementById('np-cover').src = COVERS[actKey];
   document.getElementById('np-title').textContent = song.title;
