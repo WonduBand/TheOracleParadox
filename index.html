@@ -851,14 +851,17 @@
       display:flex;
       flex-direction:row;
       flex-wrap:nowrap;
+      align-items:flex-start;
       justify-content:flex-start;
       gap:0 !important;
       overflow-x:auto;
+      overflow-y:hidden;
       scroll-snap-type:x mandatory;
       -webkit-overflow-scrolling:touch;
       width:100%;
       max-width:100%;
       scrollbar-width:none;
+      transition:height 0.32s ease;
     }
     .content-area.playing::-webkit-scrollbar{ display:none; }
     .content-area.playing .tracklist-col,
@@ -1354,15 +1357,45 @@ function isMobileLayout(){
   return window.innerWidth <= MOBILE_BREAKPOINT;
 }
 
+function getPanelCols(){
+  return [
+    contentArea.querySelector('.tracklist-col'),
+    contentArea.querySelector('.artwork-col'),
+    contentArea.querySelector('.lyrics-col'),
+  ];
+}
+
+function syncPanelHeight(index){
+  if (!isMobileLayout() || !contentArea.classList.contains('playing')) {
+    contentArea.style.height = '';
+    return;
+  }
+  const cols = getPanelCols();
+  const active = cols[index];
+  if (active){
+    contentArea.style.height = active.scrollHeight + 'px';
+  }
+}
+
+function currentPanelIndex(){
+  return Math.round(contentArea.scrollLeft / Math.max(1, contentArea.clientWidth));
+}
+
 function syncPanelNav(){
   const show = isMobileLayout() && contentArea.classList.contains('playing');
   panelNav.style.display = show ? 'flex' : 'none';
   nowplayingEl.style.bottom = show ? panelNav.offsetHeight + 'px' : '0px';
   syncBarPadding();
+  if (show){
+    requestAnimationFrame(() => syncPanelHeight(currentPanelIndex()));
+  } else {
+    contentArea.style.height = '';
+  }
 }
 
 function goToPanel(index){
   const width = contentArea.clientWidth;
+  syncPanelHeight(index);
   contentArea.scrollTo({ left: index * width, behavior: 'smooth' });
   panelNavBtns.forEach((b, i) => b.classList.toggle('active', i === index));
 }
@@ -1376,8 +1409,9 @@ contentArea.addEventListener('scroll', () => {
   if (!isMobileLayout() || !contentArea.classList.contains('playing')) return;
   if (panelScrollRAF) cancelAnimationFrame(panelScrollRAF);
   panelScrollRAF = requestAnimationFrame(() => {
-    const idx = Math.round(contentArea.scrollLeft / Math.max(1, contentArea.clientWidth));
+    const idx = currentPanelIndex();
     panelNavBtns.forEach((b, i) => b.classList.toggle('active', i === idx));
+    syncPanelHeight(idx);
   });
 });
 
