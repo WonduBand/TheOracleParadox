@@ -20,10 +20,13 @@
 
     --actI:#4fd6ff;
     --actI-dim:#1f5f75;
+    --actI-rgb:79,214,255;
     --actII:#ff3b4e;
     --actII-dim:#7a1e28;
+    --actII-rgb:255,59,78;
     --actIII:#c9a2ff;
     --actIII-dim:#5f4a8a;
+    --actIII-rgb:201,162,255;
 
     --bar-h:84px;
   }
@@ -438,7 +441,7 @@
   .track:hover{ border-color:#3a4150; }
   .track.current{ background:var(--panel2); }
   .track.viewing:not(.current){ border-color:rgba(201,162,75,0.4); }
-  .track.viewing:not(.current) .tnum{ color:var(--gold); opacity:0.9; }
+  .track.viewing:not(.current) .tnum{ opacity:0.9; }
 
   .track-row{
     display:flex;
@@ -459,7 +462,10 @@
     font-size:0.78rem;
     transition:all 0.15s ease;
     position:relative;
+    outline:none;
   }
+  .track-playbtn:focus-visible{ box-shadow:0 0 0 2px rgba(201,162,75,0.35); }
+  .track:focus-visible, .track-row:focus{ outline:none; }
   .track-playbtn:hover{ border-color:var(--gold); color:var(--gold); }
   .track-playbtn svg{ width:12px; height:12px; }
   .track-playbtn .eq{ display:none; gap:2px; align-items:flex-end; height:12px; }
@@ -691,6 +697,9 @@
   #player[data-accent="actI"] .track.current .track-title{ color:var(--actI); }
   #player[data-accent="actI"] .track::before{ background:var(--actI); }
   #player[data-accent="actI"] .track.current .track-playbtn{ border-color:var(--actI); color:var(--actI); }
+  #player[data-accent="actI"] .track.current .tnum{ color:var(--actI); }
+  #player[data-accent="actI"] .track.viewing:not(.current){ border-color:rgba(var(--actI-rgb),0.45); }
+  #player[data-accent="actI"] .track.viewing:not(.current) .tnum{ color:var(--actI); }
   #player[data-accent="actI"] .track:hover .track-playbtn{ border-color:var(--actI); color:var(--actI); }
   #player[data-accent="actI"] .track-playbtn .eq span{ background:var(--actI); }
   #player[data-accent="actI"] .lyrics-section .sec-label{ color:var(--actI); }
@@ -705,6 +714,9 @@
   #player[data-accent="actII"] .track.current .track-title{ color:var(--actII); }
   #player[data-accent="actII"] .track::before{ background:var(--actII); }
   #player[data-accent="actII"] .track.current .track-playbtn{ border-color:var(--actII); color:var(--actII); }
+  #player[data-accent="actII"] .track.current .tnum{ color:var(--actII); }
+  #player[data-accent="actII"] .track.viewing:not(.current){ border-color:rgba(var(--actII-rgb),0.45); }
+  #player[data-accent="actII"] .track.viewing:not(.current) .tnum{ color:var(--actII); }
   #player[data-accent="actII"] .track:hover .track-playbtn{ border-color:var(--actII); color:var(--actII); }
   #player[data-accent="actII"] .track-playbtn .eq span{ background:var(--actII); }
   #player[data-accent="actII"] .lyrics-section .sec-label{ color:var(--actII); }
@@ -719,6 +731,9 @@
   #player[data-accent="actIII"] .track.current .track-title{ color:var(--actIII); }
   #player[data-accent="actIII"] .track::before{ background:var(--actIII); }
   #player[data-accent="actIII"] .track.current .track-playbtn{ border-color:var(--actIII); color:var(--actIII); }
+  #player[data-accent="actIII"] .track.current .tnum{ color:var(--actIII); }
+  #player[data-accent="actIII"] .track.viewing:not(.current){ border-color:rgba(var(--actIII-rgb),0.45); }
+  #player[data-accent="actIII"] .track.viewing:not(.current) .tnum{ color:var(--actIII); }
   #player[data-accent="actIII"] .track:hover .track-playbtn{ border-color:var(--actIII); color:var(--actIII); }
   #player[data-accent="actIII"] .track-playbtn .eq span{ background:var(--actIII); }
   #player[data-accent="actIII"] .lyrics-section .sec-label{ color:var(--actIII); }
