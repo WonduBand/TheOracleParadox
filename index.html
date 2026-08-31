@@ -268,22 +268,6 @@
     letter-spacing:1px;
     color:var(--text);
   }
-  .cover-card .play-overlay{
-    position:absolute; inset:0;
-    display:flex; align-items:center; justify-content:center;
-    background:rgba(5,6,8,0.0);
-    opacity:0;
-    transition:opacity 0.3s ease, background 0.3s ease;
-  }
-  .cover-card:hover .play-overlay{ opacity:1; background:rgba(5,6,8,0.28); }
-  .play-overlay .ring{
-    width:64px; height:64px; border-radius:50%;
-    border:1.5px solid rgba(233,235,241,0.85);
-    display:flex; align-items:center; justify-content:center;
-    backdrop-filter:blur(2px);
-  }
-  .play-overlay svg{ width:22px; height:22px; margin-left:3px; }
-
   footer.home-footer{
     margin-top:70px;
     color:var(--dim2);
@@ -1029,18 +1013,15 @@
   <div class="covers">
     <div class="cover-card" data-act="actI">
       <img src="Cover_Album1.png" alt="Act I — The Oracle">
-      <div class="play-overlay"><div class="ring"><svg viewBox="0 0 24 24" fill="#e9ebf1"><path d="M8 5v14l11-7z"/></svg></div></div>
-      <div class="cap"><div class="actno">ACT I</div><div class="actname">The Oracle</div></div>
+            <div class="cap"><div class="actno">ACT I</div><div class="actname">The Oracle</div></div>
     </div>
     <div class="cover-card" data-act="actII">
       <img src="Cover_Album2.png" alt="Act II — Analog">
-      <div class="play-overlay"><div class="ring"><svg viewBox="0 0 24 24" fill="#e9ebf1"><path d="M8 5v14l11-7z"/></svg></div></div>
-      <div class="cap"><div class="actno">ACT II</div><div class="actname">Analog</div></div>
+            <div class="cap"><div class="actno">ACT II</div><div class="actname">Analog</div></div>
     </div>
     <div class="cover-card" data-act="actIII">
       <img src="Cover_Album3.png" alt="Act III — Emergence">
-      <div class="play-overlay"><div class="ring"><svg viewBox="0 0 24 24" fill="#e9ebf1"><path d="M8 5v14l11-7z"/></svg></div></div>
-      <div class="cap"><div class="actno">ACT III</div><div class="actname">Emergence</div></div>
+            <div class="cap"><div class="actno">ACT III</div><div class="actname">Emergence</div></div>
     </div>
   </div>
 
