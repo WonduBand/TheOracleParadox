@@ -206,17 +206,31 @@
     }
   });
 
-  const reticle = $("reticle");
-  const fine = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
-  if (fine && !reduce) {
-    document.documentElement.classList.add("has-cursor");
+  const pointerRing = document.querySelector(".pointer-ring");
+  const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  if (pointerRing && finePointer && !reduce) {
+    document.documentElement.classList.add("fine-pointer");
+    let mx = window.innerWidth / 2;
+    let my = window.innerHeight / 2;
+    let rx = mx;
+    let ry = my;
     window.addEventListener("pointermove", (e) => {
       if (e.pointerType !== "mouse") return;
-      reticle.style.left = e.clientX + "px";
-      reticle.style.top = e.clientY + "px";
+      mx = e.clientX;
+      my = e.clientY;
+      document.documentElement.classList.add("pointer-on");
+      const hot = e.target && e.target.closest && e.target.closest("a, button, .track, input, label");
+      document.documentElement.classList.toggle("pointer-hot", !!hot);
     });
-    window.addEventListener("pointerdown", () => reticle.classList.add("down"));
-    window.addEventListener("pointerup", () => reticle.classList.remove("down"));
+    document.documentElement.addEventListener("mouseleave", () => {
+      document.documentElement.classList.remove("pointer-on");
+    });
+    (function follow() {
+      rx += (mx - rx) * 0.16;
+      ry += (my - ry) * 0.16;
+      pointerRing.style.transform = "translate(" + rx + "px," + ry + "px)";
+      requestAnimationFrame(follow);
+    })();
   }
 
   const fullscreenBtn = $("fullscreenBtn");
@@ -484,11 +498,14 @@
       document.documentElement.style.scrollPaddingBottom = "";
       return;
     }
-    const h = nowplayingEl.offsetHeight + 28;
+    const h = nowplayingEl.offsetHeight + 64;
     document.body.style.paddingBottom = h + "px";
     document.documentElement.style.scrollPaddingBottom = h + "px";
   }
-  window.addEventListener("resize", syncBarPadding);
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > 860 && nowplayingEl.classList.contains("collapsed")) setCollapsed(false);
+    syncBarPadding();
+  });
 
   function setCollapsed(collapsed) {
     nowplayingEl.classList.toggle("collapsed", collapsed);
@@ -517,7 +534,7 @@
     playingIndex = index;
     document.body.dataset.playing = actKey;
     if (currentAct !== actKey) openAlbum(actKey, index);
-    else viewTrack(actKey, index, true);
+    else viewTrack(actKey, index, false);
     setHash(actKey, index, true);
 
     const cover = $("np-cover");
@@ -527,7 +544,7 @@
     $("np-title").textContent = song.title;
     $("np-album").textContent = act.title;
     document.body.classList.add("has-player");
-    npStatus.textContent = "";
+    npStatus.textContent = "Loading…";
     npStatus.classList.remove("err");
     requestAnimationFrame(syncBarPadding);
 
@@ -538,6 +555,8 @@
     }).catch(() => {
       isPlaying = false;
       updatePlayIcon();
+      npStatus.textContent = "Playback could not start. Press play.";
+      npStatus.classList.add("err");
     });
     refreshNowPlayingHighlight();
   }
@@ -550,6 +569,17 @@
     updatePlayIcon();
   });
   audioEl.addEventListener("play", () => { isPlaying = true; updatePlayIcon(); });
+  audioEl.addEventListener("playing", () => {
+    if (!npStatus.classList.contains("err")) npStatus.textContent = "";
+  });
+  audioEl.addEventListener("waiting", () => {
+    if (playingIndex === -1 || npStatus.classList.contains("err")) return;
+    npStatus.textContent = "Buffering…";
+  });
+  audioEl.addEventListener("stalled", () => {
+    if (playingIndex === -1 || npStatus.classList.contains("err")) return;
+    npStatus.textContent = "Buffering…";
+  });
   audioEl.addEventListener("pause", () => { isPlaying = false; updatePlayIcon(); });
   audioEl.addEventListener("ended", () => { nextTrack(); });
   audioEl.addEventListener("loadedmetadata", () => {
