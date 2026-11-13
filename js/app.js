@@ -707,6 +707,7 @@
     $("ms-art").src = art;
     $("ms-art").alt = song.title;
     $("ms-caption").textContent = song.caption || "";
+    $("mstage").dataset.act = actKey;
     $("msAct").textContent = DATA[actKey].title;
     $("msTitle").textContent = song.title;
     $("ms-lyrics").innerHTML = mobileLyrics(song);

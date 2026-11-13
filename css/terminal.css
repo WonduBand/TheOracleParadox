@@ -435,6 +435,9 @@ html.js .reveal:nth-child(3).in { transition-delay: 0.16s; }
 #deck[data-act="actI"] { --accent: var(--actI); --accent-rgb: 57, 243, 229; }
 #deck[data-act="actII"] { --accent: var(--actII); --accent-rgb: 255, 45, 85; }
 #deck[data-act="actIII"] { --accent: var(--actIII); --accent-rgb: 214, 255, 58; }
+#mstage[data-act="actI"] { --accent: var(--actI); --accent-rgb: 57, 243, 229; }
+#mstage[data-act="actII"] { --accent: var(--actII); --accent-rgb: 255, 45, 85; }
+#mstage[data-act="actIII"] { --accent: var(--actIII); --accent-rgb: 214, 255, 58; }
 body.in-deck { background-color: #04060a; }
 .deck-bar {
   display: flex;
@@ -745,7 +748,17 @@ body.in-deck { background-color: #04060a; }
 
 .artwork-frame { position: relative; border: 1px solid rgba(var(--accent-rgb), 0.35); }
 .artwork-frame img { display: block; width: 100%; aspect-ratio: 1; object-fit: cover; }
-.artwork-caption { margin-top: 12px; color: var(--muted); font-size: 0.95rem; line-height: 1.55; }
+.artwork-caption {
+  margin-top: 12px;
+  font-family: "Exo 2", "Segoe UI", sans-serif;
+  font-weight: 500;
+  font-size: 0.95rem;
+  letter-spacing: 0.045em;
+  line-height: 1.55;
+  color: var(--accent);
+  color: color-mix(in srgb, var(--accent) 74%, #f7fbff);
+  text-shadow: 0 0 18px rgba(var(--accent-rgb), 0.32);
+}
 .artwork-placeholder, .instrumental-placeholder {
   min-height: 220px;
   display: grid;
@@ -1057,12 +1070,7 @@ body.has-player { padding-bottom: 108px; }
     border-radius: 16px;
     box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
   }
-  #ms-caption {
-    margin: 10px 0 0;
-    color: #d7e6f4;
-    font-size: 0.84rem;
-    line-height: 1.45;
-  }
+  #ms-caption { margin: 10px 0 0; font-size: 0.86rem; }
   .ms-glass {
     flex: 1;
     min-height: 0;

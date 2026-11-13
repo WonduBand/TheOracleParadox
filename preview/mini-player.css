@@ -80,9 +80,14 @@
 }
 .piece p {
   margin: 10px 0 0;
-  color: #d7e6f4;
-  font-size: 0.84rem;
-  line-height: 1.45;
+  font-family: "Exo 2", "Segoe UI", sans-serif;
+  font-weight: 500;
+  font-size: 0.86rem;
+  letter-spacing: 0.045em;
+  line-height: 1.5;
+  color: var(--accent);
+  color: color-mix(in srgb, var(--accent) 74%, #f7fbff);
+  text-shadow: 0 0 18px rgba(var(--accent-rgb), 0.32);
 }
 .full-art {
   position: absolute;
