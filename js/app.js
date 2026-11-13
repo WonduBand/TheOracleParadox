@@ -5,10 +5,10 @@
     actII: "ui/cover-act2.webp",
     actIII: "ui/cover-act3.webp"
   };
-  const BACKGROUNDS = {
-    actI: "url('Background_Album1.jpg')",
-    actII: "url('Background_Album2.jpg')",
-    actIII: "url('Background_Album3.jpg')"
+  const CITY_SRC = {
+    actI: "Background_Album1.jpg",
+    actII: "Background_Album2.jpg",
+    actIII: "Background_Album3.jpg"
   };
   const BOOT_LINES = [
     "WONDU // ORACLE",
@@ -246,10 +246,31 @@
   });
   document.addEventListener("fullscreenchange", updateFullscreenIcon);
 
+  const cityEl = document.getElementById("city");
+  const cityImgs = cityEl ? cityEl.querySelectorAll("img") : [];
+  function setCity(actKey) {
+    if (!cityEl) return;
+    if (!actKey) {
+      cityEl.hidden = true;
+      return;
+    }
+    const src = CITY_SRC[actKey];
+    const first = cityImgs[0];
+    if (first.getAttribute("src") !== src) {
+      cityImgs.forEach((img) => { img.src = src; });
+    }
+    const show = () => { cityEl.hidden = false; };
+    if (first.complete && first.naturalWidth) show();
+    else first.addEventListener("load", show, { once: true });
+  }
+  document.addEventListener("visibilitychange", () => {
+    if (cityEl) cityEl.classList.toggle("paused", document.hidden);
+  });
+
   function showHome() {
     currentAct = null;
     document.body.classList.remove("in-deck");
-    document.body.style.backgroundImage = "";
+    setCity(null);
     homeEl.hidden = false;
     deckEl.hidden = true;
     setAccent(null);
@@ -420,8 +441,7 @@
     $("deckKicker").textContent = act.title.split("—")[0].trim();
     deckEl.dataset.act = actKey;
     document.body.classList.add("in-deck");
-    document.body.style.backgroundImage =
-      "linear-gradient(180deg, rgba(4,6,10,0.55), rgba(4,6,10,0.78)), " + BACKGROUNDS[actKey];
+    setCity(actKey);
     setAccent(actKey);
     homeEl.hidden = true;
     deckEl.hidden = false;
