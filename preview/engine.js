@@ -10,6 +10,14 @@
     actIII: "../Background_Album3.jpg"
   };
 
+  function coverSrc(actKey) {
+    const web = {
+      actI: "../ui/cover-act1.webp",
+      actII: "../ui/cover-act2.webp",
+      actIII: "../ui/cover-act3.webp"
+    };
+    return web[actKey] || asset(COVERS[actKey]);
+  }
   function asset(path) {
     return "../" + String(path).split("/").map(encodeURIComponent).join("/");
   }
@@ -52,5 +60,5 @@
     "</button>";
   }
 
-  global.OraclePreview = { ACTS, asset, esc, fmt, lyricsHTML, setAct, trackRow, DATA, ALBUM_META };
+  global.OraclePreview = { ACTS, asset, coverSrc, esc, fmt, lyricsHTML, setAct, trackRow, DATA, ALBUM_META };
 })(window);

@@ -963,6 +963,137 @@ body.has-player { padding-bottom: 108px; }
   .hud-btn { letter-spacing: 0.08em; padding: 8px 8px; }
 }
 
+#np-line { display: none; height: 2px; background: rgba(255, 255, 255, 0.14); }
+#np-line span { display: block; height: 100%; width: 0; background: var(--accent); }
+#mstage { display: none; }
+
+@media (max-width: 860px) {
+  #deck .feed { display: none !important; }
+  #npToggle { display: none !important; }
+  #nowplaying {
+    left: 10px;
+    right: 10px;
+    bottom: calc(10px + env(safe-area-inset-bottom));
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  #np-line { display: block; }
+  #nowplaying .np-content {
+    grid-template-columns: 44px minmax(0, 1fr) 44px;
+    grid-template-areas: "cover info controls";
+    gap: 8px;
+    padding: 10px 8px;
+  }
+  #np-controls #np-prev,
+  #np-controls #np-next,
+  #np-progress-wrap,
+  #np-volume,
+  #np-status:not(.err) { display: none !important; }
+  #np-play { border: 0 !important; width: 40px; height: 40px; }
+  #np-cover { width: 44px; height: 44px; border-radius: 8px; }
+  body.mstage-open #nowplaying { visibility: hidden; }
+  body.mstage-open { overflow: hidden; }
+
+  #mstage {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    flex-direction: column;
+    background: #04060a;
+    transform: translate3d(0, 100%, 0);
+    visibility: hidden;
+  }
+  #mstage.show {
+    display: flex;
+    transform: none;
+    visibility: visible;
+  }
+  .ms-bleed {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.28) saturate(1.05);
+    transform: scale(1.04);
+  }
+  .ms-dim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(4, 6, 10, 0.15), rgba(4, 6, 10, 0.55) 42%, rgba(4, 6, 10, 0.9));
+  }
+  .ms-top, .ms-piece, .ms-glass, .ms-dock { position: relative; z-index: 1; }
+  .ms-top {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: calc(8px + env(safe-area-inset-top)) 8px 0;
+  }
+  .ms-chev {
+    width: 44px;
+    height: 44px;
+    background: none;
+    border: 0;
+    color: var(--ink);
+  }
+  .ms-chev svg { width: 22px; height: 22px; }
+  .ms-kicker { color: var(--accent); letter-spacing: 0.16em; text-transform: uppercase; font-size: 0.64rem; }
+  .ms-who strong {
+    display: block;
+    font-family: var(--display);
+    font-size: 1rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .ms-piece { padding: 4px 22px 0; text-align: center; }
+  .ms-piece img {
+    width: min(52vw, 210px);
+    aspect-ratio: 1;
+    object-fit: cover;
+    margin: 0 auto;
+    border-radius: 16px;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+  }
+  #ms-caption {
+    margin: 10px 0 0;
+    color: #d7e6f4;
+    font-size: 0.84rem;
+    line-height: 1.45;
+  }
+  .ms-glass {
+    flex: 1;
+    min-height: 0;
+    margin: 14px 16px 8px;
+    overflow: auto;
+    scrollbar-width: none;
+    padding: 16px 16px 8px;
+    border-radius: 20px;
+    background: rgba(6, 10, 16, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(16px);
+  }
+  .ms-glass::-webkit-scrollbar { display: none; }
+  .ms-dock { padding: 4px 20px calc(14px + env(safe-area-inset-bottom)); }
+  .ms-seek { display: flex; align-items: center; gap: 10px; }
+  .ms-seek span { color: var(--faint); font-size: 0.72rem; min-width: 36px; }
+  .ms-seek span:last-child { text-align: right; }
+  .ms-transport { display: flex; justify-content: center; align-items: center; gap: 26px; margin-top: 8px; }
+  .ms-transport button { background: none; border: 0; color: var(--ink); width: 44px; height: 44px; }
+  .ms-transport svg { width: 22px; height: 22px; fill: currentColor; }
+  #ms-play {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #041014;
+  }
+  #ms-lyrics .sec-label { color: var(--accent); letter-spacing: 0.14em; font-size: 0.72rem; text-transform: uppercase; margin: 14px 0 4px; }
+  #ms-lyrics p { margin: 0 0 4px; line-height: 1.45; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation: none !important;

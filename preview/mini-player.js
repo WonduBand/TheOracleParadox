@@ -24,6 +24,10 @@
     const act = P.DATA[listAct];
     document.getElementById("actTitle").textContent = act.title;
     document.getElementById("actBlurb").textContent = P.ALBUM_META[listAct].desc;
+    const hero = document.getElementById("albumHero");
+    hero.src = P.coverSrc(listAct);
+    hero.alt = act.title;
+    hero.onerror = () => { hero.onerror = null; hero.src = P.asset(COVERS[listAct]); };
     if (!full.classList.contains("show")) P.setAct(phone, listAct);
     document.getElementById("tracks").innerHTML = act.songs.map((song) => P.trackRow(song, listAct)).join("");
     document.querySelectorAll(".track").forEach((btn) => {
@@ -41,11 +45,19 @@
     const song = songAt(playAct, playIndex);
     if (!song) return;
     const art = P.asset(song.art);
-    document.getElementById("miniArt").src = art;
-    document.getElementById("miniArt").alt = song.title;
+    const cover = P.coverSrc(playAct);
+    document.getElementById("miniArt").src = cover;
+    document.getElementById("miniArt").alt = P.DATA[playAct].title;
+    document.getElementById("miniArt").onerror = function () {
+      this.onerror = null;
+      this.src = P.asset(COVERS[playAct]);
+    };
     document.getElementById("miniTitle").textContent = song.title;
     document.getElementById("miniAlbum").textContent = P.DATA[playAct].title;
     document.getElementById("fullArt").src = art;
+    document.getElementById("pieceArt").src = art;
+    document.getElementById("pieceArt").alt = song.title;
+    document.getElementById("pieceCaption").textContent = song.caption || "";
     document.getElementById("fullAct").textContent = P.DATA[playAct].title;
     document.getElementById("fullTitle").textContent = song.title;
     document.getElementById("lyricBody").innerHTML = P.lyricsHTML(song);
