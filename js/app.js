@@ -242,6 +242,21 @@
     document.title = "WONDU — The Oracle Paradox";
   }
 
+  function setFeedHidden(hidden) {
+    contentArea.querySelectorAll(".feed").forEach((el) => {
+      el.setAttribute("aria-hidden", hidden ? "true" : "false");
+    });
+  }
+  function revealFeeds() {
+    contentArea.classList.add("open");
+    setFeedHidden(false);
+    if (reduce) return;
+    [artworkPanel, lyricsPanel].forEach((el) => {
+      el.classList.remove("arrive");
+      void el.offsetWidth;
+      el.classList.add("arrive");
+    });
+  }
   function standby(panel, label, text) {
     panel.innerHTML = '<div class="standby"><span>' + esc(label) + "</span><p>" + esc(text) + "</p></div>";
   }
@@ -370,6 +385,7 @@
       else if (bottom > parent.scrollTop + parent.clientHeight) parent.scrollTop = bottom - parent.clientHeight + 4;
     }
     document.title = song.title + " — " + DATA[actKey].title + " — WONDU";
+    revealFeeds();
     if (scroll && window.innerWidth <= 860) {
       const target = $("visualPanel");
       if (target) target.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
@@ -397,10 +413,18 @@
     deckEl.hidden = false;
     tracklistEl.innerHTML = "";
     act.songs.forEach((song) => tracklistEl.appendChild(renderTrack(song, actKey)));
+    if (contentArea.dataset.act !== actKey) {
+      contentArea.classList.remove("open");
+      setFeedHidden(true);
+      contentArea.dataset.act = actKey;
+      void contentArea.offsetWidth;
+    }
     if (index > -1 && act.songs[index]) viewTrack(actKey, index, false);
     else {
       viewAct = null;
       viewIndex = -1;
+      contentArea.classList.remove("open");
+      setFeedHidden(true);
       standby(lyricsPanel, "Lyric Data", "Select a track");
       standby(artworkPanel, "Visual Feed", "Select a track");
       document.title = act.title + " — WONDU";
