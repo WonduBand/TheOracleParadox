@@ -15,7 +15,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/terminal.css?v=sleek">
+<link rel="stylesheet" href="css/terminal.css?v=drift">
 <style>
   html,body{background:#04060a;color:#e8f4ff;margin:0}
   html.no-boot #boot{display:none!important}
@@ -34,6 +34,15 @@
 <a class="skip" href="#albums">Skip to albums</a>
 
 <div id="fx" aria-hidden="true">
+  <div id="city" hidden>
+    <div class="city-track">
+      <img alt="" decoding="async">
+      <img class="city-flip" alt="" decoding="async">
+      <img alt="" decoding="async">
+      <img class="city-flip" alt="" decoding="async">
+    </div>
+    <div class="city-shade"></div>
+  </div>
   <canvas id="grid"></canvas>
   <div class="vignette"></div>
   <div class="scanlines"></div>
@@ -224,6 +233,6 @@
 <audio id="audioEl" preload="none"></audio>
 
 <script src="js/data.js?v=slide" defer></script>
-<script src="js/app.js?v=sleek" defer></script>
+<script src="js/app.js?v=drift" defer></script>
 </body>
 </html>

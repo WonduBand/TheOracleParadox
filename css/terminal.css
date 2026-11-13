@@ -31,7 +31,7 @@ body {
   font-family: var(--mono);
   font-size: 16px;
   line-height: 1.5;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 body.booting { overflow: hidden; }
 img { max-width: 100%; height: auto; }
@@ -57,8 +57,40 @@ button { color: inherit; }
   z-index: 0;
   pointer-events: none;
   overflow: hidden;
+  contain: paint;
 }
-#grid { position: absolute; inset: 0; width: 100%; height: 100%; }
+#city {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: 0;
+}
+#city[hidden] { display: none !important; }
+.city-track {
+  width: 100%;
+  will-change: transform;
+  animation: cityFall 96s linear infinite;
+  transform: translate3d(0, 0, 0);
+}
+.city-track img {
+  display: block;
+  width: 100%;
+  height: auto;
+  backface-visibility: hidden;
+}
+.city-flip { transform: scaleY(-1); }
+.city-shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(4, 6, 10, 0.62), rgba(4, 6, 10, 0.74) 42%, rgba(4, 6, 10, 0.82));
+  pointer-events: none;
+}
+#city.paused .city-track { animation-play-state: paused; }
+@keyframes cityFall {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(0, -50%, 0); }
+}
+#grid { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; }
 .vignette {
   position: absolute;
   inset: 0;
@@ -82,17 +114,16 @@ button { color: inherit; }
 }
 .noise {
   position: absolute;
-  inset: -20px;
+  inset: 0;
   background-image: url("../ui/noise.png");
   background-size: 180px 180px;
   opacity: 0.045;
   mix-blend-mode: screen;
-  animation: noiseShift 0.9s steps(2, end) infinite;
+  animation: noiseShift 1.6s steps(2, end) infinite;
 }
 @keyframes noiseShift {
-  0% { transform: translate(0, 0); }
-  50% { transform: translate(-12px, 8px); }
-  100% { transform: translate(6px, -10px); }
+  0%, 100% { opacity: 0.04; }
+  50% { opacity: 0.07; }
 }
 
 #pointer { display: none; }
@@ -404,12 +435,7 @@ html.js .reveal:nth-child(3).in { transition-delay: 0.16s; }
 #deck[data-act="actI"] { --accent: var(--actI); --accent-rgb: 57, 243, 229; }
 #deck[data-act="actII"] { --accent: var(--actII); --accent-rgb: 255, 45, 85; }
 #deck[data-act="actIII"] { --accent: var(--actIII); --accent-rgb: 214, 255, 58; }
-body.in-deck {
-  background-color: #04060a;
-  background-size: cover;
-  background-position: center top;
-  background-attachment: fixed;
-}
+body.in-deck { background-color: #04060a; }
 .deck-bar {
   display: flex;
   align-items: center;
@@ -697,6 +723,7 @@ body.in-deck {
   overflow: visible;
   scrollbar-width: none;
 }
+.panel.feed { overflow: hidden; }
 .tracklist::-webkit-scrollbar,
 .lyrics::-webkit-scrollbar,
 .artwork-panel::-webkit-scrollbar,
@@ -923,7 +950,6 @@ body.has-player { padding-bottom: 108px; }
       "status status status";
     padding: 8px 12px calc(10px + env(safe-area-inset-bottom));
   }
-  body.in-deck { background-attachment: scroll; }
   #np-cover { width: 44px; height: 44px; }
   body.has-player { padding-bottom: 148px; }
   body.has-player:has(#nowplaying.collapsed) { padding-bottom: 72px; }
