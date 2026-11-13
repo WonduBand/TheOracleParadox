@@ -1,0 +1,102 @@
+.sheet, .lyric-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  background: rgba(4, 6, 10, 0.55);
+  transform: translate3d(0, 100%, 0);
+  visibility: hidden;
+  transition: transform 0.48s var(--ease), visibility 0.48s;
+  padding-top: env(safe-area-inset-top);
+}
+.phone:has(.sheet.show) .list,
+.phone:has(.lyric-layer.show) .list { visibility: hidden; }
+.sheet.show, .lyric-layer.show {
+  transform: none;
+  visibility: visible;
+}
+.sheet-top, .lyric-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px 0;
+}
+.sheet-top .who, .lyric-top .who { min-width: 0; }
+.sheet-top strong, .lyric-top strong {
+  display: block;
+  font-family: var(--display);
+  font-size: 0.95rem;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.kicker { color: var(--accent); letter-spacing: 0.18em; text-transform: uppercase; font-size: 0.64rem; }
+
+.art-wrap {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  place-items: center;
+  padding: 12px 28px 8px;
+}
+.art-wrap img {
+  width: min(100%, 78%);
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 18px;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.45);
+}
+.sheet-foot {
+  padding: 8px 26px calc(18px + env(safe-area-inset-bottom));
+}
+.sheet-foot h2 {
+  margin: 0 0 14px;
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 1.15rem;
+  letter-spacing: 0.02em;
+  text-align: center;
+}
+.lyrics-open {
+  display: block;
+  width: 100%;
+  margin-top: 16px;
+  min-height: 42px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-size: 0.68rem;
+  color: var(--accent);
+}
+.hint {
+  margin: 2px 0 0;
+  text-align: center;
+  color: var(--faint);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-size: 0.6rem;
+}
+.status { min-height: 1.1em; text-align: center; color: #ff5d6c; font-size: 0.75rem; margin: 8px 0 0; }
+
+.lyric-layer { z-index: 4; background: #04060a; }
+.lyric-bg {
+  position: absolute;
+  inset: -8%;
+  width: 116%;
+  height: 116%;
+  object-fit: cover;
+  filter: blur(14px) brightness(0.82) saturate(1.2);
+}
+.lyric-dim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(4, 6, 10, 0.72) 0%, rgba(4, 6, 10, 0.28) 28%, rgba(4, 6, 10, 0.5) 100%);
+}
+.lyric-top, .lyric-scroll { position: relative; z-index: 1; }
+.lyric-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 8px 26px calc(28px + env(safe-area-inset-bottom));
+}
