@@ -941,6 +941,7 @@ body.has-player { padding-bottom: 108px; }
   .deck-panels > .panel:first-child,
   .deck-panels.open > .panel:first-child { max-width: none; }
   .np-toggle { display: grid; }
+  #np-vol-slider { display: none; }
   .np-content {
     grid-template-columns: auto minmax(0, 1fr) auto;
     grid-template-areas:
