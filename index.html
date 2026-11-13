@@ -15,7 +15,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/terminal.css?v=novol">
+<link rel="stylesheet" href="css/terminal.css?v=c4">
 <style>
   html,body{background:#04060a;color:#e8f4ff;margin:0}
   html.no-boot #boot{display:none!important}
@@ -194,6 +194,7 @@
 </main>
 
 <div id="nowplaying" aria-label="Now playing">
+  <div id="np-line" aria-hidden="true"><span id="np-line-fill"></span></div>
   <button type="button" id="npToggle" class="np-toggle" title="Hide or show player" aria-expanded="true">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
   </button>
@@ -229,9 +230,42 @@
   </div>
 </div>
 
+<section id="mstage" aria-hidden="true">
+  <img id="ms-bleed" class="ms-bleed" alt="">
+  <div class="ms-dim"></div>
+  <div class="ms-top" id="msTop">
+    <button type="button" class="ms-chev" id="msClose" aria-label="Collapse player">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+    <div class="ms-who">
+      <div class="ms-kicker" id="msAct"></div>
+      <strong id="msTitle"></strong>
+    </div>
+  </div>
+  <div class="ms-piece">
+    <img id="ms-art" alt="">
+    <p id="ms-caption"></p>
+  </div>
+  <div class="ms-glass" id="msGlass">
+    <div id="ms-lyrics"></div>
+  </div>
+  <div class="ms-dock">
+    <div class="ms-seek">
+      <span id="ms-time">0:00</span>
+      <input id="ms-seek" type="range" min="0" max="0" value="0" step="0.1" aria-label="Seek">
+      <span id="ms-dur">0:00</span>
+    </div>
+    <div class="ms-transport">
+      <button type="button" id="ms-prev" aria-label="Previous track"><svg viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg></button>
+      <button type="button" id="ms-play" aria-label="Play or pause"><svg id="ms-play-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
+      <button type="button" id="ms-next" aria-label="Next track"><svg viewBox="0 0 24 24"><path d="M16 6h2v12h-2zM4.5 18l8.5-6-8.5-6z"/></svg></button>
+    </div>
+  </div>
+</section>
+
 <audio id="audioEl" preload="none"></audio>
 
 <script src="js/data.js?v=slide" defer></script>
-<script src="js/app.js?v=nosfx" defer></script>
+<script src="js/app.js?v=c4" defer></script>
 </body>
 </html>

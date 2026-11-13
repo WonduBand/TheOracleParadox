@@ -289,6 +289,10 @@
       }
     });
     row.addEventListener("click", () => {
+      if (window.innerWidth <= 860) {
+        playTrack(actKey, song.trackNum - 1);
+        return;
+      }
       viewTrack(actKey, song.trackNum - 1, true);
       setHash(actKey, song.trackNum - 1, true);
     });
@@ -388,11 +392,8 @@
       else if (bottom > parent.scrollTop + parent.clientHeight) parent.scrollTop = bottom - parent.clientHeight + 4;
     }
     document.title = song.title + " — " + DATA[actKey].title + " — WONDU";
-    revealFeeds();
-    if (scroll && window.innerWidth <= 860) {
-      const target = $("visualPanel");
-      if (target) target.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
-    }
+    if (window.innerWidth > 860) revealFeeds();
+    fillMobileStage();
   }
 
   function openAlbum(actKey, index) {
@@ -490,6 +491,7 @@
   }
   window.addEventListener("resize", () => {
     if (window.innerWidth > 860 && nowplayingEl.classList.contains("collapsed")) setCollapsed(false);
+    if (window.innerWidth > 860) closeMobileStage();
     syncBarPadding();
   });
 
@@ -571,11 +573,24 @@
   audioEl.addEventListener("loadedmetadata", () => {
     npSeek.max = audioEl.duration || 0;
     npDuration.textContent = fmtTime(audioEl.duration);
+    const msSeek = $("ms-seek");
+    if (msSeek) {
+      msSeek.max = audioEl.duration || 0;
+      $("ms-dur").textContent = fmtTime(audioEl.duration);
+    }
   });
   audioEl.addEventListener("timeupdate", () => {
+    const ratio = audioEl.duration ? (audioEl.currentTime / audioEl.duration) * 100 : 0;
+    const fill = $("np-line-fill");
+    if (fill) fill.style.width = ratio + "%";
     if (!isSeeking) {
       npSeek.value = audioEl.currentTime;
       npTime.textContent = fmtTime(audioEl.currentTime);
+      const msSeek = $("ms-seek");
+      if (msSeek && !msSeeking) {
+        msSeek.value = audioEl.currentTime;
+        $("ms-time").textContent = fmtTime(audioEl.currentTime);
+      }
     }
   });
   npSeek.addEventListener("input", () => { isSeeking = true; npTime.textContent = fmtTime(npSeek.value); });
@@ -633,9 +648,12 @@
   });
 
   function updatePlayIcon() {
-    npPlayIcon.innerHTML = isPlaying
+    const icon = isPlaying
       ? '<path d="M6 5h4v14H6zm8 0h4v14h-4z"/>'
       : '<path d="M8 5v14l11-7z"/>';
+    npPlayIcon.innerHTML = icon;
+    const msIcon = $("ms-play-icon");
+    if (msIcon) msIcon.innerHTML = icon;
     refreshNowPlayingHighlight();
   }
   $("np-play").addEventListener("click", () => {
@@ -668,6 +686,84 @@
       if (audioEl.paused) audioEl.play(); else audioEl.pause();
     }
   });
+
+  let msSeeking = false;
+  function mobileLyrics(song) {
+    if (song.instrumental) {
+      return '<p class="sec-label">' + esc(song.note || "Instrumental") + "</p><p>No lyrics</p>";
+    }
+    return song.sections.map((s) =>
+      '<div class="sec-label">' + esc(s.label) + "</div>" +
+      s.lines.map((line) => "<p>" + esc(line) + "</p>").join("")
+    ).join("");
+  }
+  function fillMobileStage() {
+    const actKey = playingAct || viewAct;
+    const index = playingIndex > -1 ? playingIndex : viewIndex;
+    if (!actKey || index < 0 || !DATA[actKey] || !DATA[actKey].songs[index]) return;
+    const song = DATA[actKey].songs[index];
+    const art = encodePath(song.art);
+    $("ms-bleed").src = art;
+    $("ms-art").src = art;
+    $("ms-art").alt = song.title;
+    $("ms-caption").textContent = song.caption || "";
+    $("msAct").textContent = DATA[actKey].title;
+    $("msTitle").textContent = song.title;
+    $("ms-lyrics").innerHTML = mobileLyrics(song);
+  }
+  function openMobileStage() {
+    if (window.innerWidth > 860) return;
+    fillMobileStage();
+    $("mstage").classList.add("show");
+    $("mstage").setAttribute("aria-hidden", "false");
+    document.body.classList.add("mstage-open");
+  }
+  function closeMobileStage() {
+    const stage = $("mstage");
+    if (!stage) return;
+    stage.classList.remove("show");
+    stage.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("mstage-open");
+  }
+  nowplayingEl.addEventListener("click", (e) => {
+    if (window.innerWidth > 860) return;
+    if (e.target.closest("button, input")) return;
+    openMobileStage();
+  });
+  $("msClose").addEventListener("click", closeMobileStage);
+  $("ms-prev").addEventListener("click", prevTrack);
+  $("ms-next").addEventListener("click", nextTrack);
+  $("ms-play").addEventListener("click", () => {
+    if (playingIndex === -1) return;
+    if (audioEl.paused) audioEl.play(); else audioEl.pause();
+  });
+  const msSeek = $("ms-seek");
+  msSeek.addEventListener("input", () => {
+    msSeeking = true;
+    $("ms-time").textContent = fmtTime(msSeek.value);
+  });
+  msSeek.addEventListener("change", () => {
+    audioEl.currentTime = Number(msSeek.value);
+    msSeeking = false;
+  });
+  function swipeClose(el, onlyAtTop) {
+    let y0 = 0;
+    let armed = false;
+    el.addEventListener("pointerdown", (e) => {
+      if (e.target.closest("button, input, a")) return;
+      y0 = e.clientY;
+      armed = true;
+    });
+    el.addEventListener("pointerup", (e) => {
+      if (!armed) return;
+      armed = false;
+      if (e.clientY - y0 < 64) return;
+      if (onlyAtTop && el.scrollTop > 0) return;
+      closeMobileStage();
+    });
+  }
+  swipeClose($("msTop"), false);
+  swipeClose($("msGlass"), true);
 
   const io = "IntersectionObserver" in window ? new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
