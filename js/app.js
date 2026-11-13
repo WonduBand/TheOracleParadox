@@ -43,8 +43,6 @@
   let viewIndex = -1;
   let isPlaying = false;
   let isSeeking = false;
-  let sfxOn = false;
-  let audioCtx = null;
   let routing = false;
 
   document.documentElement.classList.add("js");
@@ -72,36 +70,6 @@
   ACTS.forEach((key) => {
     const el = $("count-" + key);
     if (el) el.textContent = counts(key);
-  });
-
-  function blip(freq, dur) {
-    if (!sfxOn) return;
-    try {
-      audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
-      const o = audioCtx.createOscillator();
-      const g = audioCtx.createGain();
-      o.type = "sine";
-      o.frequency.value = freq || 740;
-      g.gain.value = 0.025;
-      g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + (dur || 0.06));
-      o.connect(g).connect(audioCtx.destination);
-      o.start();
-      o.stop(audioCtx.currentTime + (dur || 0.06));
-    } catch (e) {}
-  }
-
-  const sfxBtn = $("sfxBtn");
-  try { sfxOn = localStorage.getItem("wondu-sfx") === "1"; } catch (e) {}
-  function syncSfx() {
-    sfxBtn.textContent = sfxOn ? "SFX · ON" : "SFX · OFF";
-    sfxBtn.setAttribute("aria-pressed", sfxOn ? "true" : "false");
-  }
-  syncSfx();
-  sfxBtn.addEventListener("click", () => {
-    sfxOn = !sfxOn;
-    try { localStorage.setItem("wondu-sfx", sfxOn ? "1" : "0"); } catch (e) {}
-    syncSfx();
-    blip(sfxOn ? 880 : 220, 0.07);
   });
 
   function dismissBoot() {
@@ -492,13 +460,11 @@
 
   document.querySelectorAll("[data-open]").forEach((btn) => {
     btn.addEventListener("click", () => {
-      blip(620, 0.05);
       const act = btn.getAttribute("data-open");
       location.hash = act;
     });
   });
   $("backBtn").addEventListener("click", () => {
-    blip(300, 0.04);
     if (location.hash) location.hash = "";
     else showHome();
   });
