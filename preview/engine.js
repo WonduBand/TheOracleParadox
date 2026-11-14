@@ -5,16 +5,16 @@
     { key: "actIII", short: "III", rgb: "214, 255, 58", color: "#d6ff3a" }
   ];
   const CITY = {
-    actI: "../Background_Album1.jpg",
-    actII: "../Background_Album2.jpg",
-    actIII: "../Background_Album3.jpg"
+    actI: "../Background_Album1.webp",
+    actII: "../Background_Album2.webp",
+    actIII: "../Background_Album3.webp"
   };
 
   function coverSrc(actKey) {
     const web = {
-      actI: "../ui/cover-act1.webp",
-      actII: "../ui/cover-act2.webp",
-      actIII: "../ui/cover-act3.webp"
+      actI: "../Cover_Album1.webp",
+      actII: "../Cover_Album2.webp",
+      actIII: "../Cover_Album3.webp"
     };
     return web[actKey] || asset(COVERS[actKey]);
   }

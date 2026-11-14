@@ -1,14 +1,14 @@
 (function () {
   const ACTS = ["actI", "actII", "actIII"];
   const COVER_WEB = {
-    actI: "ui/cover-act1.webp",
-    actII: "ui/cover-act2.webp",
-    actIII: "ui/cover-act3.webp"
+    actI: "Cover_Album1.webp",
+    actII: "Cover_Album2.webp",
+    actIII: "Cover_Album3.webp"
   };
   const CITY_SRC = {
-    actI: "Background_Album1.jpg",
-    actII: "Background_Album2.jpg",
-    actIII: "Background_Album3.jpg"
+    actI: "Background_Album1.webp",
+    actII: "Background_Album2.webp",
+    actIII: "Background_Album3.webp"
   };
   const BOOT_LINES = [
     "WONDU // ORACLE",
@@ -688,6 +688,8 @@
   });
 
   let msSeeking = false;
+  let msSongKey = "";
+  let msPage = 0;
   function mobileLyrics(song) {
     if (song.instrumental) {
       return '<p class="sec-label">' + esc(song.note || "Instrumental") + "</p><p>No lyrics</p>";
@@ -711,6 +713,11 @@
     $("msAct").textContent = DATA[actKey].title;
     $("msTitle").textContent = song.title;
     $("ms-lyrics").innerHTML = mobileLyrics(song);
+    const key = actKey + ":" + index;
+    if (key !== msSongKey) {
+      msSongKey = key;
+      setMobilePage(0);
+    }
   }
   function openMobileStage() {
     if (window.innerWidth > 860) return;
@@ -747,24 +754,49 @@
     audioEl.currentTime = Number(msSeek.value);
     msSeeking = false;
   });
+  function setMobilePage(page) {
+    msPage = page === 1 ? 1 : 0;
+    $("mstage").classList.toggle("ms-lyrics", msPage === 1);
+    document.querySelectorAll("#msDots button").forEach((btn) => {
+      const on = Number(btn.dataset.msPage) === msPage;
+      btn.classList.toggle("on", on);
+      btn.setAttribute("aria-selected", on ? "true" : "false");
+    });
+    if (msPage === 1) $("msGlass").scrollTop = 0;
+  }
   function swipeClose(el, onlyAtTop) {
+    let x0 = 0;
     let y0 = 0;
     let armed = false;
     el.addEventListener("pointerdown", (e) => {
       if (e.target.closest("button, input, a")) return;
+      x0 = e.clientX;
       y0 = e.clientY;
       armed = true;
     });
     el.addEventListener("pointerup", (e) => {
       if (!armed) return;
       armed = false;
-      if (e.clientY - y0 < 64) return;
-      if (onlyAtTop && el.scrollTop > 0) return;
-      closeMobileStage();
+      const dx = e.clientX - x0;
+      const dy = e.clientY - y0;
+      if (Math.abs(dx) < 12 && Math.abs(dy) < 12) return;
+      if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 48) {
+        setMobilePage(dx < 0 ? 1 : 0);
+        return;
+      }
+      if (dy > 64 && Math.abs(dy) > Math.abs(dx)) {
+        if (onlyAtTop && el.scrollTop > 0) return;
+        closeMobileStage();
+      }
     });
   }
-  swipeClose($("msTop"), false);
+  swipeClose($("msPager"), false);
   swipeClose($("msGlass"), true);
+  $("msDots").addEventListener("click", (e) => {
+    const btn = e.target.closest("button");
+    if (!btn) return;
+    setMobilePage(Number(btn.dataset.msPage));
+  });
 
   const io = "IntersectionObserver" in window ? new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
