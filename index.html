@@ -8,14 +8,14 @@
 <meta name="description" content="Wondu Presents The Oracle Paradox — A Cyberpunk Trilogy. Act I The Oracle, Act II Analog, Act III Emergence.">
 <meta property="og:title" content="WONDU — The Oracle Paradox">
 <meta property="og:description" content="Wondu Presents The Oracle Paradox — A Cyberpunk Trilogy">
-<meta property="og:image" content="https://wonduband.github.io/TheOracleParadox/Cover_Album1.png">
+<meta property="og:image" content="https://wonduband.github.io/TheOracleParadox/Cover_Album1.webp">
 <meta property="og:type" content="website">
 <title>WONDU — The Oracle Paradox</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%2304060a'/%3E%3Ccircle cx='16' cy='16' r='8' fill='none' stroke='%2339f3e5' stroke-width='1.5'/%3E%3Ccircle cx='16' cy='16' r='2.2' fill='%23ff2bd6'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500&family=Orbitron:wght@500;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/terminal.css?v=caption">
+<link rel="stylesheet" href="css/terminal.css?v=swipe">
 <style>
   html,body{background:#04060a;color:#e8f4ff;margin:0}
   html.no-boot #boot{display:none!important}
@@ -94,8 +94,7 @@
         <span class="brackets" aria-hidden="true"></span>
         <span class="act-media">
           <picture>
-            <source srcset="ui/cover-act1.webp" type="image/webp">
-            <img src="Cover_Album1.png" alt="Act I — The Oracle" width="1254" height="1254" decoding="async" fetchpriority="high">
+            <img src="Cover_Album1.webp" alt="Act I — The Oracle" width="1254" height="1254" decoding="async" fetchpriority="high">
           </picture>
           <span class="chip">ACT I</span>
         </span>
@@ -113,8 +112,7 @@
         <span class="brackets" aria-hidden="true"></span>
         <span class="act-media">
           <picture>
-            <source srcset="ui/cover-act2.webp" type="image/webp">
-            <img src="Cover_Album2.png" alt="Act II — Analog" width="1254" height="1254" decoding="async" loading="lazy">
+            <img src="Cover_Album2.webp" alt="Act II — Analog" width="1254" height="1254" decoding="async" loading="lazy">
           </picture>
           <span class="chip">ACT II</span>
         </span>
@@ -132,8 +130,7 @@
         <span class="brackets" aria-hidden="true"></span>
         <span class="act-media">
           <picture>
-            <source srcset="ui/cover-act3.webp" type="image/webp">
-            <img src="Cover_Album3.png" alt="Act III — Emergence" width="1254" height="1254" decoding="async" loading="lazy">
+            <img src="Cover_Album3.webp" alt="Act III — Emergence" width="1254" height="1254" decoding="async" loading="lazy">
           </picture>
           <span class="chip">ACT III</span>
         </span>
@@ -242,12 +239,22 @@
       <strong id="msTitle"></strong>
     </div>
   </div>
-  <div class="ms-piece">
-    <img id="ms-art" alt="">
-    <p id="ms-caption" class="artwork-caption"></p>
+  <div class="ms-pager" id="msPager">
+    <div class="ms-track" id="msTrack">
+      <div class="ms-page" id="msArtPage">
+        <img id="ms-art" alt="">
+        <p id="ms-caption" class="artwork-caption"></p>
+      </div>
+      <div class="ms-page">
+        <div class="ms-glass" id="msGlass">
+          <div id="ms-lyrics"></div>
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="ms-glass" id="msGlass">
-    <div id="ms-lyrics"></div>
+  <div class="ms-dots" id="msDots" role="tablist" aria-label="Player pages">
+    <button type="button" class="on" data-ms-page="0" role="tab" aria-selected="true" aria-label="Artwork"></button>
+    <button type="button" data-ms-page="1" role="tab" aria-selected="false" aria-label="Lyrics"></button>
   </div>
   <div class="ms-dock">
     <div class="ms-seek">
@@ -266,6 +273,6 @@
 <audio id="audioEl" preload="none"></audio>
 
 <script src="js/data.js?v=slide" defer></script>
-<script src="js/app.js?v=caption" defer></script>
+<script src="js/app.js?v=swipe" defer></script>
 </body>
 </html>
