@@ -118,7 +118,7 @@
     };
   }
   function setAccent(act) {
-    accent = act === "actII" ? [255, 45, 85] : act === "actIII" ? [214, 255, 58] : [57, 243, 229];
+    accent = act === "actII" ? [255, 45, 85] : act === "actIII" ? [46, 229, 106] : [57, 243, 229];
   }
   function resizeCanvas() {
     const dpr = Math.min(window.devicePixelRatio || 1, window.innerWidth < 800 ? 1 : 1.35);

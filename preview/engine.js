@@ -2,7 +2,7 @@
   const ACTS = [
     { key: "actI", short: "I", rgb: "57, 243, 229", color: "#39f3e5" },
     { key: "actII", short: "II", rgb: "255, 45, 85", color: "#ff2d55" },
-    { key: "actIII", short: "III", rgb: "214, 255, 58", color: "#d6ff3a" }
+    { key: "actIII", short: "III", rgb: "46, 229, 106", color: "#2ee56a" }
   ];
   const CITY = {
     actI: "../Background_Album1.webp",

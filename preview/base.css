@@ -52,7 +52,7 @@ img { max-width: 100%; display: block; }
   --accent-rgb: 57, 243, 229;
 }
 .phone[data-act="actII"] { --accent: #ff2d55; --accent-rgb: 255, 45, 85; }
-.phone[data-act="actIII"] { --accent: #d6ff3a; --accent-rgb: 214, 255, 58; }
+.phone[data-act="actIII"] { --accent: #2ee56a; --accent-rgb: 46, 229, 106; }
 
 .city { position: absolute; inset: 0; overflow: hidden; z-index: 0; }
 .city-track {

@@ -11,7 +11,7 @@
   --danger: #ff5d6c;
   --actI: #39f3e5;
   --actII: #ff2d55;
-  --actIII: #d6ff3a;
+  --actIII: #2ee56a;
   --accent: var(--cyan);
   --accent-rgb: 57, 243, 229;
   --top: 64px;
@@ -301,7 +301,7 @@ html.fine-pointer.pointer-hot .pointer-ring {
 }
 .act-card[data-act="actI"] { --accent: var(--actI); --accent-rgb: 57, 243, 229; }
 .act-card[data-act="actII"] { --accent: var(--actII); --accent-rgb: 255, 45, 85; }
-.act-card[data-act="actIII"] { --accent: var(--actIII); --accent-rgb: 214, 255, 58; }
+.act-card[data-act="actIII"] { --accent: var(--actIII); --accent-rgb: 46, 229, 106; }
 .act-open:hover, .act-open:focus-visible {
   transform: translateY(-8px);
   border-color: var(--accent);
@@ -434,10 +434,10 @@ html.js .reveal:nth-child(3).in { transition-delay: 0.16s; }
 #deck { max-width: none; }
 #deck[data-act="actI"] { --accent: var(--actI); --accent-rgb: 57, 243, 229; }
 #deck[data-act="actII"] { --accent: var(--actII); --accent-rgb: 255, 45, 85; }
-#deck[data-act="actIII"] { --accent: var(--actIII); --accent-rgb: 214, 255, 58; }
+#deck[data-act="actIII"] { --accent: var(--actIII); --accent-rgb: 46, 229, 106; }
 #mstage[data-act="actI"] { --accent: var(--actI); --accent-rgb: 57, 243, 229; }
 #mstage[data-act="actII"] { --accent: var(--actII); --accent-rgb: 255, 45, 85; }
-#mstage[data-act="actIII"] { --accent: var(--actIII); --accent-rgb: 214, 255, 58; }
+#mstage[data-act="actIII"] { --accent: var(--actIII); --accent-rgb: 46, 229, 106; }
 body.in-deck { background-color: #04060a; }
 .deck-bar {
   display: flex;
