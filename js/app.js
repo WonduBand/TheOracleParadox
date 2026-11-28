@@ -536,7 +536,7 @@
     npStatus.classList.remove("err");
     requestAnimationFrame(syncBarPadding);
 
-    audioEl.src = song.audioUrl || encodePath(song.file);
+    audioEl.src = song.audioUrl;
     audioEl.play().then(() => {
       isPlaying = true;
       updatePlayIcon();
@@ -551,7 +551,7 @@
 
   audioEl.addEventListener("error", () => {
     if (playingIndex === -1) return;
-    npStatus.textContent = "Audio could not be loaded. Try again in a moment.";
+    npStatus.textContent = "Suno audio could not be loaded. Try again in a moment.";
     npStatus.classList.add("err");
     isPlaying = false;
     updatePlayIcon();

@@ -70,7 +70,7 @@
     playAct = act;
     playIndex = index;
     paint();
-    const src = P.asset(song.file);
+    const src = song.audioUrl;
     if (audio.getAttribute("src") !== src) {
       audio.src = src;
       document.getElementById("status").textContent = "Loading…";
